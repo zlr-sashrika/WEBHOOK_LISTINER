@@ -23,19 +23,41 @@
 // });
 
 
+// const express = require('express');
+// const app = express();
+// const PORT = process.env.PORT || 3000;
+
+// app.use(express.json()); // To handle JSON payloads
+
+// // Define the webhook listener endpoint
+// app.post('/domain', (req, res) => {
+//   console.log('Received a webhook:', req.body);
+//   res.status(200).send('Webhook received');
+// });
+
+// // Start the server
+// app.listen(PORT, () => {
+//   console.log(`Server is running on port ${PORT}`);
+// });
+
 const express = require('express');
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// Use a more descriptive logger name
+const logger = require('pino')({ name: 'webhook-listener' });
 
 app.use(express.json()); // To handle JSON payloads
 
 // Define the webhook listener endpoint
 app.post('/domain', (req, res) => {
-  console.log('Received a webhook:', req.body);
+  // Log the received webhook data
+  logger.info('Received a webhook:', req.body);
+
   res.status(200).send('Webhook received');
 });
 
 // Start the server
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  logger.info(`Server is running on port ${PORT}`);
 });
