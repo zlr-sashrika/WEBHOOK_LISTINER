@@ -39,3 +39,6 @@ app.post('/domain', (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
+
+
+//you have to work now I DONT CARE
