@@ -1,0 +1,44 @@
+apiVersion: v2
+name: webhook-listener
+version: 0.1.0
+description: A Helm chart for Kubernetes
+
+# This is the chart version. This version number should be incremented each time you make changes
+# to the chart and its templates, including the app version.
+# Versions are expected to follow Semantic Versioning (SemVer)
+# Values with the x.y.z format (x.y.z+metadata)
+appVersion: "1.16.0"
+
+# This is the version of the application being deployed. This version number should be
+# incremented each time you make changes to the application. 
+
+maintainers:
+  - name: DevOpsGPT
+    email: devopsgpt@example.com
+
+# Specify the dependencies your chart requires
+# dependencies:
+#   - name: common
+#     repository: https://charts.bitnami.com/bitnami
+#     version: 1.x.x
+
+# Specify which versions of Kubernetes are supported
+kubeVersion: ">=1.16.0-0"
+
+# These are the icon and the logo of the application
+icon: https://example.com/icon.png
+
+# Keywords to find your chart
+keywords:
+  - webhook
+  - listener
+  - nodejs
+  - express
+
+# Sources for the application
+sources:
+  - https://github.com/your-repo
+
+# Annotations can be used to add additional metadata
+annotations:
+  category: DeveloperTools

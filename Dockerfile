@@ -1,18 +1,30 @@
-FROM python:3.9-slim-buster
+# Use the official Node.js image as the base image
+FROM node:14
 
-# Set environment variables
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
-
-# Set working directory
+# Set the working directory in the container
 WORKDIR /app
 
-# Install dependencies
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# Copy package.json and package-lock.json
+COPY package*.json ./
 
-# Copy project files
+# Install dependencies
+RUN npm install
+
+# Copy the rest of the application code
 COPY . .
 
-# Run the application
-CMD ["python", "app.py"]
+# Expose the port the app runs on
+EXPOSE 3000
+
+# Define environment variable for the Docker build
+ARG GHCR_USERNAME
+ARG GHCR_PASSWORD
+
+# Login to GitHub Container Registry
+RUN echo $GHCR_PASSWORD | docker login ghcr.io -u $GHCR_USERNAME --password-stdin
+
+# Build the application
+RUN npm run build
+
+# Start the application
+CMD ["node", "index.js"]
