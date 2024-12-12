@@ -1,0 +1,44 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14.x'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Build Docker image
+      run: |
+        echo ${{ secrets.GHCR_PASSWORD }} | docker login ghcr.io -u ${{ secrets.GHCR_USERNAME }} --password-stdin
+        docker build -t ghcr.io/zlr-sashrika/webhook-listener:${{ github.sha }} .
+        docker push ghcr.io/zlr-sashrika/webhook-listener:${{ github.sha }}
+
+    - name: Run Tests
+      run: npm test
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Deploy to Kubernetes
+      run: |
+        echo "${{ secrets.KUBE_CONFIG_DATA }}" | base64 -d > kubeconfig
+        kubectl --kubeconfig=kubeconfig set image deployment/webhook-listener webhook-listener=ghcr.io/zlr-sashrika/webhook-listener:${{ github.sha }}
