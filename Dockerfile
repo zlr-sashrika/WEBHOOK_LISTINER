@@ -1,18 +1,23 @@
-FROM python:3.9-slim-buster
+# Use a minimal base image for Node.js
+FROM node:16-slim
 
 # Set environment variables
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+ENV NODE_ENV=production
 
 # Set working directory
 WORKDIR /app
 
-# Install dependencies
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# Copy package.json and package-lock.json
+COPY package.json package-lock.json ./
+
+# Install dependencies without dev dependencies
+RUN npm install --only=production
 
 # Copy project files
 COPY . .
 
-# Run the application
-CMD ["python", "app.py"]
+# Expose the port the app runs on
+EXPOSE 3000
+
+# Command to run the application
+CMD ["node", "index.js"]
